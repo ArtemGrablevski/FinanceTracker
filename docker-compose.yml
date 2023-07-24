@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+
+  db:
+    image: postgres:15
+    container_name: pg_database
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD="trust"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  tg_bot:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: telegram_bot
+    command: [ "/finance_tracker/entrypoint.sh" ]
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
